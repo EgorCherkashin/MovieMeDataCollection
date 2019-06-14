@@ -24,7 +24,8 @@ def checkusr(id, i):
         f.close()
 
 
-for i in range(23385, len(allusrs)):
+for i in range(75000, len(allusrs)):
     checkusr(''.join(allusrs[i]), i)
 
-#Got to 14609
+
+#Got to 51897

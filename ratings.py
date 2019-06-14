@@ -13,33 +13,55 @@ from bs4 import BeautifulSoup
 # print(deeper)
 #main .article .lister #ratings-container .lister-item mode-detail .lister-item-content
 
-page = requests.get('https://www.imdb.com/user/ur12453789/ratings').text
-soup = BeautifulSoup(page,"lxml")
+id = "12659803"
+position = "0"
+urltemplate = "https://www.imdb.com/user/ur" + id + "/ratings?sort=date_added%2Cdesc&mode=detai&lastPosition=" + position
 
-lmovies = []
-lratings = []
-for item in soup.select(".lister-item-header a"):
-    lmovies.append(item.text)
+def nummovies(id):
+    url = "https://www.imdb.com/user/ur" + id + "/ratings"
+    page = requests.get(url).text
+    soup = BeautifulSoup(page,"lxml")
+    movienum = soup.findAll("span", {"id": "lister-header-current-size"})
+    final = movienum[0].text
+    final = final.replace(',', '')
+    return(int(final)) 
 
-user = soup.findAll("div", {"class": "ipl-rating-star--other-user"})
+def pagescan(url, position):
+    url = "https://www.imdb.com/user/ur" + id + "/ratings?sort=date_added%2Cdesc&mode=detai&lastPosition=" + position
+    page = requests.get(url).text
+    print("PAGE: ", url)
+    soup = BeautifulSoup(page,"lxml")
 
-for i in user:
-    ratings = i.findAll("span", {"class": "ipl-rating-star__rating"})
-    for i in ratings:
-        if i.text == "Rate":
-            pass
-        else:
-            lratings.append(i.text)
+    lmovies = []
+    lratings = []
+    for item in soup.select(".lister-item-header a"):
+        lmovies.append(item.text)
+    user = soup.findAll("div", {"class": "ipl-rating-star--other-user"})
 
-# print(lmovies)
-# print(lratings)
+    for i in user:
+        ratings = i.findAll("span", {"class": "ipl-rating-star__rating"})
+        for i in ratings:
+            if i.text == "Rate":
+                pass
+            else:
+                lratings.append(i.text)
 
-def mergelist(l1, l2):
-    final = [0] * len(l1)
-    if len(l1) == len(l2):
-        for i in range(0, len(l1)):
-            final[i] = (l1[i], l2[i])
-    return(final)
+    def mergelist(l1, l2):
+        final = [0] * len(l1)
+        if len(l1) == len(l2):
+            for i in range(0, len(l1)):
+                final[i] = (l1[i], l2[i])
+        return(final)
 
-print(mergelist(lmovies, lratings))
+    # print(mergelist(lmovies, lratings))
 
+
+number = nummovies(id)
+print(number)
+if number < 100:
+    print("PAGE NUMBER PENIS")
+    pagescan(id, "0")
+else:
+    for i in range(int(number/100)):
+        print("PAGE NUMBER: ", i)
+        pagescan(id, str(100*i))
