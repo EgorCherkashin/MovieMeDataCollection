@@ -56,12 +56,19 @@ def pagescan(url, position):
     # print(mergelist(lmovies, lratings))
 
 
-number = nummovies(id)
-print(number)
-if number < 100:
-    print("PAGE NUMBER PENIS")
-    pagescan(id, "0")
-else:
-    for i in range(int(number/100)):
-        print("PAGE NUMBER: ", i)
-        pagescan(id, str(100*i))
+# number = nummovies(id)
+# print(number)
+# if number < 100:
+#     print("PAGE NUMBER PENIS")
+#     pagescan(id, "0")
+# else:
+#     for i in range(int(number/100)):
+#         print("PAGE NUMBER: ", i)
+#         pagescan(id, str(100*i))
+
+file = open("usrs.txt", "r") 
+usrs = file.readlines()
+
+test = usrs[0].replace("\n", "")
+
+print(pagescan(test, "0"))
